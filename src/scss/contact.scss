@@ -1,0 +1,113 @@
+.table {
+    width: 1024px;
+    height: 705px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+
+.haeder {
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 60px;
+    margin-right: 60px;
+    font-family: 'Pathway Gothic One';
+    font-size: 28px;
+}
+
+.box {
+    margin-left: 60px;
+    margin-right: 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.map {
+    margin-top: 80px;
+    height: 410px;
+    width: 440px;
+    text-transform: uppercase;
+    font-family: 'Pathway Gothic One';
+    font-size: 28px;
+}
+
+.contact {
+    margin-left: 30px;
+    margin-top: 175px;
+    width: 300px;
+    height: 410px;
+    font-size: 13px;
+    font-family: 'Arial';
+    text-align: left;
+}
+
+.table_contact {
+    margin-bottom: 50px;
+}
+
+.demolink {
+    text-decoration: none;
+    color: red;
+}
+
+.form {
+    margin-top: 80px;
+    margin-left: 35px;
+    width: 425px;
+    height: 410px;
+}
+
+.form h3 {
+    text-transform: uppercase;
+    font-family: 'Pathway Gothic One';
+    font-size: 33px;
+}
+
+input {
+    background-color: #fcfafa;
+    border: solid 1px #d4d0d0;
+    font-size: 13px;
+}
+
+.feedback input:nth-child(1) {
+    width: 210px;
+    margin-bottom: 20px;
+    padding: 3px;
+}
+
+.feedback input:nth-child(2) {
+    width: 210px;
+    padding: 3px;
+    margin-bottom: 20px;
+}
+
+.feedback input:nth-child(3) {
+    width: 210px;
+    padding: 3px;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 210px;
+    height: 235px;
+    background-color: #fcfafa;
+    border: solid 1px #d4d0d0;
+    font-size: 13px;
+    font-family: 'Arial';
+    margin-bottom: 20px;
+}
+
+.feedback input:nth-child(5) {
+    width: 30%;
+    border-radius: 5px;
+    margin-right: 15px;
+    margin-left: 33px;
+    height: 28px;
+}
+
+.feedback input:nth-child(6) {
+    width: 30%;
+    border-radius: 5px;
+    height: 28px;
+}

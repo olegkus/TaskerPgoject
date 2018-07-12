@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <title>Login</title>
+</head>
+<body id="login-body">
+    <div class="login-table">
+        <form action="#">
+            <p>
+                <strong>Login</strong>
+                <input maxlength="25" size="30" id="login" required>
+            </p>
+            <p>
+                <strong>Password</strong>
+                <input type="password" maxlength="25" size="30" id="password" required>
+            </p>
+            <p class="login-button">
+            <input type="submit" value="Login" onclick="Login(document.getElementById(`login`).value,document.getElementById(`password`).value)">
+            </p>    
+        </form>
+    </div>
+<script src="../js/index.js"></script>
+</body>
+</html>
