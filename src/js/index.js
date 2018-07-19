@@ -15,18 +15,21 @@ else{
     let person = database.persons.find((p)=>p.id==personid); 
     person.__proto__ = dbmodels[person.type].prototype;
 
+
+    
     let menuItems = getMenuItems(person);
-
-
-
     let menuControl = new MenuControl(menuItems, menuItemClickFunction);
     document.body.appendChild(menuControl.render());
+
+
 
     let contentDiv = document.createElement('div');
     contentDiv.id='content';
     document.body.appendChild(contentDiv);
     menuActions.renderTasksPage(database, person);
 
+
+    
     function menuItemClickFunction(menu_item_hash) {
         switch (menu_item_hash) {
             case '#tasks': menuActions.renderTasksPage(database,person); break;

@@ -148,6 +148,7 @@ function renderNewTaskPage(database, person) {
         let title = document.getElementById("title").value;
         let details = document.getElementById("details").value;
         let agentid = document.getElementById("agentid").value;
+        
         let agent = database.persons.find((x)=>x.id==agentid);
         let task = new dbmodels.Task(title, details, person.id, agentid);
         let mail = new dbmodels.Message(person.email, agent.email, task, 'Mission created');

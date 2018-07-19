@@ -113,7 +113,6 @@ if (!personid) {
     person.__proto__ = _dbmodels__WEBPACK_IMPORTED_MODULE_3___default.a[person.type].prototype;
 
     let menuItems = getMenuItems(person);
-
     let menuControl = new _menuControl__WEBPACK_IMPORTED_MODULE_2__["default"](menuItems, menuItemClickFunction);
     document.body.appendChild(menuControl.render());
 
@@ -10921,6 +10920,7 @@ function renderNewTaskPage(database, person) {
         let title = document.getElementById("title").value;
         let details = document.getElementById("details").value;
         let agentid = document.getElementById("agentid").value;
+
         let agent = database.persons.find(x => x.id == agentid);
         let task = new _dbmodels__WEBPACK_IMPORTED_MODULE_1___default.a.Task(title, details, person.id, agentid);
         let mail = new _dbmodels__WEBPACK_IMPORTED_MODULE_1___default.a.Message(person.email, agent.email, task, 'Mission created');
