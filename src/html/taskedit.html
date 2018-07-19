@@ -1,12 +1,20 @@
-<div>
-    <label for="title">Title:</label><input type="text" id="title"><br>
-<label for="details">Details:</label>
-<input type="textarea" id="details">
+<div class="editform">
+    <h3>New task</h3>
 <br>
-<label for="agentid">Agent:</label>
-<select id="agentid"></select>
-<br>
-<input type="button" id="btnSave" value="Save">
-<input type="button" id="btnCancel" value="Cancel">
-<br>
- </div>
+    <label for="title">Title:</label>
+    <input type="text" id="title">
+    <br>
+    <label for="details">Details:</label>
+    <input type="textarea" id="details">
+    <br>
+    <label for="agentid">Agent:</label>
+    <select id="agentid">
+        <%for(let agent of agents){%>
+        <option selected value='<%-agent.id%>'><%-agent.name%> <%-agent.surname%></option>
+        <%}%>
+    </select>
+    <br>
+    <input type="button" id="btnSave" value="Save">
+    <input type="button" id="btnCancel" value="Cancel">
+    <br>
+</div>

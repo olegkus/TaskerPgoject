@@ -19,7 +19,17 @@ module.exports = {
 			"login": "jb",
 			"password": "hello",
 			"photo": "agent1.jpg"
-		}		
+		},
+		{
+			"type": "Agent",
+			"id": "a00e45cb-f2aa-4066-8633-e70214f06325",
+			"name": "Mad",
+			"surname": "Max",
+			"email": "mad.max@test.tt",
+			"login": "mm",
+			"password": "hello",
+			"photo": "agent9.jpg"
+		}
 		
 	],
 	
@@ -146,6 +156,7 @@ module.exports = {
 	
 	"messages":[
 		{
+			"id": "93dc66ab-1fb2-4d46-9511-37222b522861",
 			"type": "Message",
 			"from": "barack.obama@test.tt",
 			"to": "james.bond@test.tt",

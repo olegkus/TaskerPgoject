@@ -94,9 +94,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _database__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_database__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var _menuControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
-/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
-/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_model__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _menuActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(47);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_dbmodels__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _menuActions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22);
 
 
 
@@ -110,7 +110,7 @@ if (!personid) {
     loginControl.render();
 } else {
     let person = _database__WEBPACK_IMPORTED_MODULE_0___default.a.persons.find(p => p.id == personid);
-    person.__proto__ = _model__WEBPACK_IMPORTED_MODULE_3___default.a[person.type].prototype;
+    person.__proto__ = _dbmodels__WEBPACK_IMPORTED_MODULE_3___default.a[person.type].prototype;
 
     let menuItems = getMenuItems(person);
 
@@ -176,7 +176,7 @@ if (!personid) {
             text: "Tasks",
             href: "#tasks"
         };
-        if (person instanceof _model__WEBPACK_IMPORTED_MODULE_3___default.a.Manager) {
+        if (person instanceof _dbmodels__WEBPACK_IMPORTED_MODULE_3___default.a.Manager) {
             tasksMenuItem.items = [{
                 text: "New task",
                 href: "#newtask"
@@ -212,6 +212,15 @@ module.exports = {
 		"login": "jb",
 		"password": "hello",
 		"photo": "agent1.jpg"
+	}, {
+		"type": "Agent",
+		"id": "a00e45cb-f2aa-4066-8633-e70214f06325",
+		"name": "Mad",
+		"surname": "Max",
+		"email": "mad.max@test.tt",
+		"login": "mm",
+		"password": "hello",
+		"photo": "agent9.jpg"
 	}],
 
 	"tasks": [{
@@ -321,6 +330,7 @@ module.exports = {
 	}],
 
 	"messages": [{
+		"id": "93dc66ab-1fb2-4d46-9511-37222b522861",
 		"type": "Message",
 		"from": "barack.obama@test.tt",
 		"to": "james.bond@test.tt",
@@ -1006,8 +1016,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuControl; });
 /* harmony import */ var html_loader_html_menu_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(12);
 /* harmony import */ var html_loader_html_menu_html__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(html_loader_html_menu_html__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
-/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_model__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dbmodels__WEBPACK_IMPORTED_MODULE_1__);
 
 __webpack_require__(13);
 let _ = __webpack_require__(15);
@@ -10560,12 +10570,12 @@ module.exports = function (module) {
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-
+const uuidv1 = __webpack_require__(19);
 
 function Person(name, surname, email, login, password) {
-	this.id = this.newid();
+	this.id = uuidv1();
 	this.name = name;
 	this.surname = surname;
 	this.email = email;
@@ -10592,7 +10602,7 @@ Manager.prototype.constructor = Manager;
 
 function Task(title, details, managerid, agentid) {
 	this.type = "Task";
-	this.id = this.newid(); //"36dh5sec7zdj90sk2rx7pjswi2";
+	this.id = uuidv1(); //"36dh5sec7zdj90sk2rx7pjswi2";
 	this.title = title;
 	this.details = details;
 	this.status = "new";
@@ -10601,23 +10611,351 @@ function Task(title, details, managerid, agentid) {
 }
 
 function Message(from, to, task, actionName) {
-	this.type = "Message", this.from = from, this.to = to, this.subject = `${actionName}: ${task.title}`, this.body = "Mission details:<br/>${task.details}<br/><a href='#'>Open mission</a>", this.status = "unread"; //"read",
+	this.id = uuidv1();
+	this.type = "Message", this.from = from, this.to = to, this.subject = `${actionName}: ${task.title}`, this.body = `Mission details:<br/>${task.details}<br/><a href='#'>Open mission</a>`, this.status = "unread"; //"read",
 	this.taskid = task.id; // ??
 }
 
 module.exports = {
 	Agent: Agent,
-	Manager: Manager
+	Manager: Manager,
+	Task: Task,
+	Message: Message
 };
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div>\r\n    <label for=\"title\">Title:</label><input type=\"text\" id=\"title\"><br>\r\n<label for=\"details\">Details:</label>\r\n<input type=\"textarea\" id=\"details\">\r\n<br>\r\n<label for=\"agentid\">Agent:</label>\r\n<select id=\"agentid\"></select>\r\n<br>\r\n    <input type=\"button\" value=\"Save\">\r\n    <input type=\"button\" value=\"Cancel\">\r\n<br>\r\n </div>";
+var rng = __webpack_require__(20);
+var bytesToUuid = __webpack_require__(21);
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+var _nodeId;
+var _clockseq;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
+// See https://github.com/broofa/node-uuid for API details
+function v1(options, buf, offset) {
+  var i = buf && offset || 0;
+  var b = buf || [];
+
+  options = options || {};
+  var node = options.node || _nodeId;
+  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
+
+  // node and clockseq need to be initialized to random values if they're not
+  // specified.  We do this lazily to minimize issues related to insufficient
+  // system entropy.  See #189
+  if (node == null || clockseq == null) {
+    var seedBytes = rng();
+    if (node == null) {
+      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+      node = _nodeId = [seedBytes[0] | 0x01, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+    }
+    if (clockseq == null) {
+      // Per 4.2.2, randomize (14 bit) clockseq
+      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
+    }
+  }
+
+  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
+
+  // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
+
+  // Time since last uuid creation (in msecs)
+  var dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000;
+
+  // Per 4.2.1.2, Bump clockseq on clock regression
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  }
+
+  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  }
+
+  // Per 4.2.1.2 Throw error if too many uuids are requested
+  if (nsecs >= 10000) {
+    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq;
+
+  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+  msecs += 12219292800000;
+
+  // `time_low`
+  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+  b[i++] = tl >>> 24 & 0xff;
+  b[i++] = tl >>> 16 & 0xff;
+  b[i++] = tl >>> 8 & 0xff;
+  b[i++] = tl & 0xff;
+
+  // `time_mid`
+  var tmh = msecs / 0x100000000 * 10000 & 0xfffffff;
+  b[i++] = tmh >>> 8 & 0xff;
+  b[i++] = tmh & 0xff;
+
+  // `time_high_and_version`
+  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+  b[i++] = tmh >>> 16 & 0xff;
+
+  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+  b[i++] = clockseq >>> 8 | 0x80;
+
+  // `clock_seq_low`
+  b[i++] = clockseq & 0xff;
+
+  // `node`
+  for (var n = 0; n < 6; ++n) {
+    b[i + n] = node[n];
+  }
+
+  return buf ? buf : bytesToUuid(b);
+}
+
+module.exports = v1;
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports) {
+
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
+
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
+}
+
+module.exports = bytesToUuid;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tableControl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(18);
+/* harmony import */ var _dbmodels__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dbmodels__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+
+function renderAgentsGallery() {
+    __webpack_require__(24);
+    let gallery = {
+        title: "The best agents",
+        items: [__webpack_require__(26), __webpack_require__(27), __webpack_require__(28), __webpack_require__(29), __webpack_require__(30), __webpack_require__(31), __webpack_require__(32), __webpack_require__(33), __webpack_require__(34)]
+    };
+
+    let galleryHtml = _.template(__webpack_require__(35))(gallery);
+    document.getElementById('content').innerHTML = galleryHtml;
+}
+
+function renderManagersGallery() {
+    __webpack_require__(24);
+    let gallery = {
+        title: "The best managers",
+        items: [__webpack_require__(36), __webpack_require__(37), __webpack_require__(38), __webpack_require__(39), __webpack_require__(40), __webpack_require__(41), __webpack_require__(42), __webpack_require__(43), __webpack_require__(44)]
+    };
+
+    let galleryHtml = _.template(__webpack_require__(35))(gallery);
+    document.getElementById('content').innerHTML = galleryHtml;
+}
+
+function renderMailboxPage(database, person) {
+
+    // "type": "Message",
+    // "from": "john.smith@test.tt",
+    // "to": "ethan.hunt@test.tt",
+    // "subject": "Mission created: Mission 1",
+    // "body": "Find mission details:<br/>Get important document from NATA office<br/><a href='#'>Open task</a>",
+    // "status": "unread",
+    // "taskid": "36dh5sec7zdj90sk2rx7pjswi2"
+
+    let columns = [{
+        name: "from",
+        title: "From",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "to",
+        title: "To",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "subject",
+        title: "Subject",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "body",
+        title: "Body",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }];
+
+    let contentDiv = document.getElementById('content');
+    while (contentDiv.firstChild) contentDiv.removeChild(contentDiv.firstChild);
+
+    __webpack_require__(45);
+    let mails = database.messages.filter(m => m["from"] == person.email || m["to"] == person.email);
+    let table = new _tableControl__WEBPACK_IMPORTED_MODULE_0__["default"](contentDiv, columns, mails);
+}
+
+function renderTasksPage(database, person) {
+    let tasksTableColumns = [{
+        name: "title",
+        title: "Title",
+        hidden: false,
+        format: x => `<a href="#" class="table-column-name__link">${x}</a>`
+    }, {
+        name: "details",
+        title: "Details",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "status",
+        title: "Status",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "manager",
+        title: "Manager",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }, {
+        name: "agent",
+        title: "Agent",
+        hidden: false,
+        format: x => `<span>${x}</span>`
+    }];
+
+    let contentDiv = document.getElementById('content');
+    while (contentDiv.firstChild) contentDiv.removeChild(contentDiv.firstChild);
+
+    __webpack_require__(45);
+    let tasks = database.tasks.filter(t => t["agentid"] == person.id || t["managerid"] == person.id);
+    let table = new _tableControl__WEBPACK_IMPORTED_MODULE_0__["default"](contentDiv, tasksTableColumns, tasks);
+}
+
+function renderNewTaskPage(database, person) {
+
+    __webpack_require__(47);
+    let agents = database.persons.filter(p => p.type == "Agent");
+    let taskeditHtml = _.template(__webpack_require__(49))({ agents: agents });
+
+    let contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = taskeditHtml; //require('html-loader!../html/taskedit.html');
+
+    let btnSave = document.getElementById('btnSave');
+    let btnCancel = document.getElementById('btnCancel');
+
+    btnSave.onclick = event => {
+        let title = document.getElementById("title").value;
+        let details = document.getElementById("details").value;
+        let agentid = document.getElementById("agentid").value;
+        let agent = database.persons.find(x => x.id == agentid);
+        let task = new _dbmodels__WEBPACK_IMPORTED_MODULE_1___default.a.Task(title, details, person.id, agentid);
+        let mail = new _dbmodels__WEBPACK_IMPORTED_MODULE_1___default.a.Message(person.email, agent.email, task, 'Mission created');
+        database.tasks.unshift(task);
+        database.messages.unshift(mail);
+        renderTasksPage(database, person);
+    };
+
+    btnCancel.onclick = event => {
+        renderTasksPage(database, person);
+    };
+}
+
+function renderContactsPage() {
+    __webpack_require__(50);
+    document.getElementById('content').innerHTML = __webpack_require__(52);
+}
+
+function Logout() {
+    sessionStorage.removeItem('personid');
+    return window.location.href = "index.html";
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    renderAgentsGallery: renderAgentsGallery,
+    renderManagersGallery: renderManagersGallery,
+    renderMailboxPage: renderMailboxPage,
+    renderTasksPage: renderTasksPage,
+    renderNewTaskPage: renderNewTaskPage,
+    renderContactsPage: renderContactsPage,
+    Logout: Logout
+});
+
+/***/ }),
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10682,56 +11020,11 @@ TableControl.prototype.renderFooter = function () {
 /* harmony default export */ __webpack_exports__["default"] = (TableControl);
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(22);
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(8)(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(6)(false);
-// imports
-
-
-// module
-exports.push([module.i, ".table {\n  width: 1024px;\n  height: 705px;\n  margin-left: auto;\n  margin-right: auto;\n  background-color: white; }\n\n.haeder {\n  text-transform: uppercase;\n  display: flex;\n  justify-content: space-between;\n  margin-left: 60px;\n  margin-right: 60px;\n  font-family: 'Pathway Gothic One';\n  font-size: 28px; }\n\n.box {\n  margin-left: 60px;\n  margin-right: 60px;\n  display: flex;\n  justify-content: space-between; }\n\n.map {\n  margin-top: 80px;\n  height: 410px;\n  width: 440px;\n  text-transform: uppercase;\n  font-family: 'Pathway Gothic One';\n  font-size: 28px; }\n\n.contact {\n  margin-left: 30px;\n  margin-top: 175px;\n  width: 300px;\n  height: 410px;\n  font-size: 13px;\n  font-family: 'Arial';\n  text-align: left; }\n\n.table_contact {\n  margin-bottom: 50px; }\n\n.demolink {\n  text-decoration: none;\n  color: red; }\n\n.form {\n  margin-top: 80px;\n  margin-left: 35px;\n  width: 425px;\n  height: 410px; }\n\n.form h3 {\n  text-transform: uppercase;\n  font-family: 'Pathway Gothic One';\n  font-size: 33px; }\n\ninput {\n  background-color: #fcfafa;\n  border: solid 1px #d4d0d0;\n  font-size: 13px; }\n\n.feedback input:nth-child(1) {\n  width: 210px;\n  margin-bottom: 20px;\n  padding: 3px; }\n\n.feedback input:nth-child(2) {\n  width: 210px;\n  padding: 3px;\n  margin-bottom: 20px; }\n\n.feedback input:nth-child(3) {\n  width: 210px;\n  padding: 3px;\n  margin-bottom: 20px; }\n\ntextarea {\n  width: 210px;\n  height: 235px;\n  background-color: #fcfafa;\n  border: solid 1px #d4d0d0;\n  font-size: 13px;\n  font-family: 'Arial';\n  margin-bottom: 20px; }\n\n.feedback input:nth-child(5) {\n  width: 30%;\n  border-radius: 5px;\n  margin-right: 15px;\n  margin-left: 33px;\n  height: 28px; }\n\n.feedback input:nth-child(6) {\n  width: 30%;\n  border-radius: 5px;\n  height: 28px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = "\r\n        <div class=\"table\">\r\n            <div class=\"box\">\r\n                <div class=\"map\">\r\n                    <h3>stay in touch</h3>\r\n                        <iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1764.3967566574204!2d-0.14357187029274965!3d51.50136398797399!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48760520cd5b5eb5%3A0xa26abf514d902a7!2z0JHRg9C60LjQvdCz0LXQvNGB0LrQuNC5INC00LLQvtGA0LXRhg!5e1!3m2!1sru!2sua!4v1530740804035\"\r\n                            width=\"410\" height=\"440\" frameborder=\"0\" style=\"border:0\" allowfullscreen>\r\n                        </iframe>\r\n                </div>\r\n                <div class=\"contact\">\r\n                    <table class=\"table_contact\">\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">85 Albert Embankment in Vauxhall</td>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr>\r\n                                <td>Freephone</td>\r\n                                <td>+1 800 5598630</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>Telephone</td>\r\n                                <td>+1 800 5598631</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>FAX</td>\r\n                                <td>+1 800 5598632</td>\r\n                            </tr>\r\n                        </tbody>\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">E-mail:\r\n                                    <a class=\"demolink\" href=\"\">mail@demolink.com</a>\r\n                                </td>\r\n                            </tr>\r\n                        </thead>\r\n                    </table>\r\n                    <table class=\"table_contact\">\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">9870 St Vincent Place, Glasgow DC 45 Fr 45.</td>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr>\r\n                                <td>Freephone</td>\r\n                                <td>+1 800 5598630</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>Telephone</td>\r\n                                <td>+1 800 5598631</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>FAX</td>\r\n                                <td>+1 800 5598632</td>\r\n                            </tr>\r\n                        </tbody>\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">E-mail:\r\n                                    <a class=\"demolink\" href=\"\">mail@demolink.com</a>\r\n                                </td>\r\n                            </tr>\r\n                        </thead>\r\n                    </table>\r\n                </div>\r\n                <div class=\"form\">\r\n                    <h3>contact us</h3>\r\n                    <form action=\"#\" method=\"get\" class=\"feedback\">\r\n                        <input type=\"text\" name=\"name\" placeholder=\"NAME\" required=\"\">\r\n                        <input type=\"E-mail\" name=\"E-mail\" placeholder=\"EMAIL\">\r\n                        <input type=\"text\" name=\"subject\" placeholder=\"SUBJECT\">\r\n                        <textarea name=\"textarea\" id=\"#\" cols=\"30\" rows=\"10\" placeholder=\"MESSAGE\"></textarea>\r\n                        <input type=\"reset\" value=\"Clear\">\r\n                        <input type=\"submit\" value=\"Send\">\r\n                        <div></div>\r\n\r\n                    </form>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-
-/***/ }),
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(30);
+var content = __webpack_require__(25);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -10760,7 +11053,7 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, ".data-table {\n  width: 90%;\n  margin-left: auto;\n  margin-right: auto;\n  border-collapse: collapse;\n  font-size: 18px;\n  font-family: 'Pathway Gothic One';\n  background-color: #fff;\n  color: grey;\n  padding-left: 20px;\n  text-align: center; }\n\n.row-table {\n  border-bottom: 1px solid #d1d1d1;\n  font-family: 'Pathway Gothic One';\n  height: 50px; }\n  .row-table:hover {\n    background-color: #f9f9f9; }\n\n.table-column-name__link {\n  text-decoration: none;\n  font-size: 18px;\n  font-family: 'Pathway Gothic One';\n  color: #6495ED; }\n", ""]);
+exports.push([module.i, ".table {\n  width: 1024px;\n  height: 850px;\n  margin-left: auto;\n  margin-right: auto;\n  background-color: white; }\n\nh3 {\n  display: inline-block;\n  font-size: 24px;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-family: 'Pathway Gothic One';\n  margin-top: 5px;\n  margin-bottom: 50px;\n  margin-left: 60px; }\n\n.picture_box {\n  display: flex;\n  justify-content: space-around;\n  margin-bottom: 40px;\n  margin-left: 60px;\n  margin-right: 60px; }\n", ""]);
 
 // exports
 
@@ -10769,8 +11062,122 @@ exports.push([module.i, ".data-table {\n  width: 90%;\n  margin-left: auto;\n  m
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "img/agents/agent1.jpg";
 
-var content = __webpack_require__(25);
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent2.jpg";
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent3.jpg";
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent4.jpg";
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent5.jpg";
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent6.jpg";
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent7.jpg";
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent8.jpg";
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/agents/agent9.jpg";
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"table\">\r\n    <h3><%-title %></h3>\r\n    <% for(let i=0; i<Math.ceil(items.length/3); i++) {%>\r\n    <div class='picture_box'>\r\n        <% for(img of items.slice(i*3,i*3+3)){  %>\r\n            <img src=\"<%-img%>\" alt=\"\">\r\n        <%}%>\r\n    </div>\r\n    <%}%>\r\n</div>\r\n";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/1.jpg";
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/2.jpg";
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/3.jpg";
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/4.jpg";
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/5.jpg";
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/6.jpg";
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/7.jpg";
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/8.jpg";
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/manager/9.jpg";
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(46);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -10791,25 +11198,7 @@ if(content.locals) module.exports = content.locals;
 if(false) {}
 
 /***/ }),
-/* 27 */
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"table\">\r\n    <h3><%-title %></h3>\r\n    <% for(let i=0; i<Math.ceil(items.length/3); i++) {%>\r\n    <div class='picture_box'>\r\n        <% for(img of items.slice(i*3,i*3+3)){  %>\r\n            <img src=\"<%-img%>\" alt=\"\">\r\n        <%}%>\r\n    </div>\r\n    <%}%>\r\n</div>\r\n";
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/1.jpg";
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/2.jpg";
-
-/***/ }),
-/* 30 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(6)(false);
@@ -10817,237 +11206,100 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, ".table {\n  width: 1024px;\n  height: 850px;\n  margin-left: auto;\n  margin-right: auto;\n  background-color: white; }\n\nh3 {\n  display: inline-block;\n  font-size: 24px;\n  text-transform: uppercase;\n  font-weight: normal;\n  font-family: 'Pathway Gothic One';\n  margin-top: 5px;\n  margin-bottom: 50px;\n  margin-left: 60px; }\n\n.picture_box {\n  display: flex;\n  justify-content: space-around;\n  margin-bottom: 40px;\n  margin-left: 60px;\n  margin-right: 60px; }\n", ""]);
+exports.push([module.i, ".data-table {\n  width: 90%;\n  margin-left: auto;\n  margin-right: auto;\n  border-collapse: collapse;\n  font-size: 18px;\n  font-family: 'Pathway Gothic One';\n  background-color: #fff;\n  color: grey;\n  padding-left: 20px;\n  text-align: center; }\n\n.row-table {\n  border-bottom: 1px solid #d1d1d1;\n  font-family: 'Pathway Gothic One';\n  height: 50px; }\n  .row-table:hover {\n    background-color: #f9f9f9; }\n\n.table-column-name__link {\n  text-decoration: none;\n  font-size: 18px;\n  font-family: 'Pathway Gothic One';\n  color: #6495ED; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/3.jpg";
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent1.jpg";
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent2.jpg";
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent3.jpg";
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent4.jpg";
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent5.jpg";
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent6.jpg";
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent7.jpg";
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent8.jpg";
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/agents/agent9.jpg";
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/4.jpg";
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/5.jpg";
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/6.jpg";
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/7.jpg";
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/8.jpg";
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/manager/9.jpg";
-
-/***/ }),
 /* 47 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _tableControl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+/***/ (function(module, exports, __webpack_require__) {
 
 
+var content = __webpack_require__(48);
 
-function renderAgentsGallery() {
-    __webpack_require__(24);
-    let gallery = {
-        title: "The best agents",
-        items: [__webpack_require__(32), __webpack_require__(33), __webpack_require__(34), __webpack_require__(35), __webpack_require__(36), __webpack_require__(37), __webpack_require__(38), __webpack_require__(39), __webpack_require__(40)]
-    };
+if(typeof content === 'string') content = [[module.i, content, '']];
 
-    let galleryHtml = _.template(__webpack_require__(27))(gallery);
-    document.getElementById('content').innerHTML = galleryHtml;
-}
+var transform;
+var insertInto;
 
-function renderManagersGallery() {
-    __webpack_require__(24);
-    let gallery = {
-        title: "The best managers",
-        items: [__webpack_require__(28), __webpack_require__(29), __webpack_require__(31), __webpack_require__(41), __webpack_require__(42), __webpack_require__(43), __webpack_require__(44), __webpack_require__(45), __webpack_require__(46)]
-    };
 
-    let galleryHtml = _.template(__webpack_require__(27))(gallery);
-    document.getElementById('content').innerHTML = galleryHtml;
-}
 
-function renderMailboxPage(database, person) {
+var options = {"hmr":true}
 
-    // "type": "Message",
-    // "from": "john.smith@test.tt",
-    // "to": "ethan.hunt@test.tt",
-    // "subject": "Mission created: Mission 1",
-    // "body": "Find mission details:<br/>Get important document from NATA office<br/><a href='#'>Open task</a>",
-    // "status": "unread",
-    // "taskid": "36dh5sec7zdj90sk2rx7pjswi2"
-    let columns = [{
-        name: "from",
-        title: "From",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "to",
-        title: "To",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "subject",
-        title: "Subject",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "body",
-        title: "Body",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }];
+options.transform = transform
+options.insertInto = undefined;
 
-    let contentDiv = document.getElementById('content');
-    while (contentDiv.firstChild) contentDiv.removeChild(contentDiv.firstChild);
+var update = __webpack_require__(8)(content, options);
 
-    __webpack_require__(26);
-    let mails = database.messages.filter(m => m["to"] == person.email);
-    let table = new _tableControl__WEBPACK_IMPORTED_MODULE_0__["default"](contentDiv, columns, mails);
-}
+if(content.locals) module.exports = content.locals;
 
-function renderTasksPage(database, person) {
-    let tasksTableColumns = [{
-        name: "title",
-        title: "Title",
-        hidden: false,
-        format: x => `<a href="#" class="table-column-name__link">${x}</a>`
-    }, {
-        name: "details",
-        title: "Details",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "status",
-        title: "Status",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "manager",
-        title: "Manager",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }, {
-        name: "agent",
-        title: "Agent",
-        hidden: false,
-        format: x => `<span>${x}</span>`
-    }];
+if(false) {}
 
-    let contentDiv = document.getElementById('content');
-    while (contentDiv.firstChild) contentDiv.removeChild(contentDiv.firstChild);
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
 
-    __webpack_require__(26);
-    let tasks = database.tasks.filter(t => t["agentid"] == person.id || t["managerid"] == person.id);
-    let table = new _tableControl__WEBPACK_IMPORTED_MODULE_0__["default"](contentDiv, tasksTableColumns, tasks);
-}
+exports = module.exports = __webpack_require__(6)(false);
+// imports
 
-function renderNewTaskPage(database, person) {
-    document.getElementById('content').innerHTML = __webpack_require__(19);
-}
 
-function renderContactsPage() {
-    __webpack_require__(21);
-    document.getElementById('content').innerHTML = __webpack_require__(23);
-}
+// module
+exports.push([module.i, ".editform {\n  font-size: 18px;\n  font-family: 'Pathway Gothic One';\n  text-align: left; }\n\n.editform h3 {\n  text-transform: uppercase;\n  font-family: 'Pathway Gothic One';\n  font-size: 33px; }\n", ""]);
 
-function Logout() {
-    sessionStorage.removeItem('personid');
-    return window.location.href = "index.html";
-}
+// exports
 
-/* harmony default export */ __webpack_exports__["default"] = ({
-    renderAgentsGallery: renderAgentsGallery,
-    renderManagersGallery: renderManagersGallery,
-    renderMailboxPage: renderMailboxPage,
-    renderTasksPage: renderTasksPage,
-    renderNewTaskPage: renderNewTaskPage,
-    renderContactsPage: renderContactsPage,
-    Logout: Logout
-});
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"editform\">\r\n    <h3>New task</h3>\r\n<br>\r\n    <label for=\"title\">Title:</label>\r\n    <input type=\"text\" id=\"title\">\r\n    <br>\r\n    <label for=\"details\">Details:</label>\r\n    <input type=\"textarea\" id=\"details\">\r\n    <br>\r\n    <label for=\"agentid\">Agent:</label>\r\n    <select id=\"agentid\">\r\n        <%for(let agent of agents){%>\r\n        <option selected value='<%-agent.id%>'><%-agent.name%> <%-agent.surname%></option>\r\n        <%}%>\r\n    </select>\r\n    <br>\r\n    <input type=\"button\" id=\"btnSave\" value=\"Save\">\r\n    <input type=\"button\" id=\"btnCancel\" value=\"Cancel\">\r\n    <br>\r\n</div>";
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(51);
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(8)(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(6)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".table {\n  width: 1024px;\n  height: 705px;\n  margin-left: auto;\n  margin-right: auto;\n  background-color: white; }\n\n.haeder {\n  text-transform: uppercase;\n  display: flex;\n  justify-content: space-between;\n  margin-left: 60px;\n  margin-right: 60px;\n  font-family: 'Pathway Gothic One';\n  font-size: 28px; }\n\n.box {\n  margin-left: 60px;\n  margin-right: 60px;\n  display: flex;\n  justify-content: space-between; }\n\n.map {\n  margin-top: 80px;\n  height: 410px;\n  width: 440px;\n  text-transform: uppercase;\n  font-family: 'Pathway Gothic One';\n  font-size: 28px; }\n\n.contact {\n  margin-left: 30px;\n  margin-top: 175px;\n  width: 300px;\n  height: 410px;\n  font-size: 13px;\n  font-family: 'Arial';\n  text-align: left; }\n\n.table_contact {\n  margin-bottom: 50px; }\n\n.demolink {\n  text-decoration: none;\n  color: red; }\n\n.form {\n  margin-top: 80px;\n  margin-left: 35px;\n  width: 425px;\n  height: 410px; }\n\n.form h3 {\n  text-transform: uppercase;\n  font-family: 'Pathway Gothic One';\n  font-size: 33px; }\n\ninput {\n  background-color: #fcfafa;\n  border: solid 1px #d4d0d0;\n  font-size: 13px; }\n\n.feedback input:nth-child(1) {\n  width: 210px;\n  margin-bottom: 20px;\n  padding: 3px; }\n\n.feedback input:nth-child(2) {\n  width: 210px;\n  padding: 3px;\n  margin-bottom: 20px; }\n\n.feedback input:nth-child(3) {\n  width: 210px;\n  padding: 3px;\n  margin-bottom: 20px; }\n\ntextarea {\n  width: 210px;\n  height: 235px;\n  background-color: #fcfafa;\n  border: solid 1px #d4d0d0;\n  font-size: 13px;\n  font-family: 'Arial';\n  margin-bottom: 20px; }\n\n.feedback input:nth-child(5) {\n  width: 30%;\n  border-radius: 5px;\n  margin-right: 15px;\n  margin-left: 33px;\n  height: 28px; }\n\n.feedback input:nth-child(6) {\n  width: 30%;\n  border-radius: 5px;\n  height: 28px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n        <div class=\"table\">\r\n            <div class=\"box\">\r\n                <div class=\"map\">\r\n                    <h3>stay in touch</h3>\r\n                        <iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1764.3967566574204!2d-0.14357187029274965!3d51.50136398797399!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48760520cd5b5eb5%3A0xa26abf514d902a7!2z0JHRg9C60LjQvdCz0LXQvNGB0LrQuNC5INC00LLQvtGA0LXRhg!5e1!3m2!1sru!2sua!4v1530740804035\"\r\n                            width=\"410\" height=\"440\" frameborder=\"0\" style=\"border:0\" allowfullscreen>\r\n                        </iframe>\r\n                </div>\r\n                <div class=\"contact\">\r\n                    <table class=\"table_contact\">\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">85 Albert Embankment in Vauxhall</td>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr>\r\n                                <td>Freephone</td>\r\n                                <td>+1 800 5598630</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>Telephone</td>\r\n                                <td>+1 800 5598631</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>FAX</td>\r\n                                <td>+1 800 5598632</td>\r\n                            </tr>\r\n                        </tbody>\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">E-mail:\r\n                                    <a class=\"demolink\" href=\"\">mail@demolink.com</a>\r\n                                </td>\r\n                            </tr>\r\n                        </thead>\r\n                    </table>\r\n                    <table class=\"table_contact\">\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">9870 St Vincent Place, Glasgow DC 45 Fr 45.</td>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr>\r\n                                <td>Freephone</td>\r\n                                <td>+1 800 5598630</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>Telephone</td>\r\n                                <td>+1 800 5598631</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>FAX</td>\r\n                                <td>+1 800 5598632</td>\r\n                            </tr>\r\n                        </tbody>\r\n                        <thead>\r\n                            <tr>\r\n                                <td colspan=\"2\">E-mail:\r\n                                    <a class=\"demolink\" href=\"\">mail@demolink.com</a>\r\n                                </td>\r\n                            </tr>\r\n                        </thead>\r\n                    </table>\r\n                </div>\r\n                <div class=\"form\">\r\n                    <h3>contact us</h3>\r\n                    <form action=\"#\" method=\"get\" class=\"feedback\">\r\n                        <input type=\"text\" name=\"name\" placeholder=\"NAME\" required=\"\">\r\n                        <input type=\"E-mail\" name=\"E-mail\" placeholder=\"EMAIL\">\r\n                        <input type=\"text\" name=\"subject\" placeholder=\"SUBJECT\">\r\n                        <textarea name=\"textarea\" id=\"#\" cols=\"30\" rows=\"10\" placeholder=\"MESSAGE\"></textarea>\r\n                        <input type=\"reset\" value=\"Clear\">\r\n                        <input type=\"submit\" value=\"Send\">\r\n                        <div></div>\r\n\r\n                    </form>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 
 /***/ })
 /******/ ]);

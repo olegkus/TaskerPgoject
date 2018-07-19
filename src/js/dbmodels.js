@@ -1,8 +1,9 @@
+const uuidv1 = require('uuid/v1');
 
 
 function Person(name, surname, email, login, password)
 {
-	this.id = this.newid(); 
+	this.id = uuidv1();
 	this.name = name;
 	this.surname = surname;
 	this.email = email;
@@ -29,7 +30,7 @@ Manager.prototype.constructor = Manager;
 
 function Task(title, details, managerid, agentid){
 	this.type = "Task";
-	this.id = this.newid(); //"36dh5sec7zdj90sk2rx7pjswi2";
+	this.id = uuidv1(); //"36dh5sec7zdj90sk2rx7pjswi2";
 	this.title = title; 
 	this.details = details;
 	this.status = "new";
@@ -40,11 +41,12 @@ function Task(title, details, managerid, agentid){
 
 function Message(from, to, task, actionName)
 {
+	this.id = uuidv1();
 	this.type = "Message",
 	this.from = from ,
 	this.to = to,
 	this.subject = `${actionName}: ${task.title}`,
-	this.body = "Mission details:<br/>${task.details}<br/><a href='#'>Open mission</a>",
+	this.body = `Mission details:<br/>${task.details}<br/><a href='#'>Open mission</a>`,
 	this.status = "unread" //"read",
 	this.taskid = task.id // ??
 }
@@ -54,5 +56,7 @@ function Message(from, to, task, actionName)
 
 module.exports = {
 	Agent: Agent, 
-	Manager: Manager
+	Manager: Manager,
+	Task: Task,
+	Message: Message
 };

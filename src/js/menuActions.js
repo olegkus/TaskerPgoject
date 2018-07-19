@@ -1,5 +1,6 @@
 
 import TableControl from './tableControl';
+import dbmodels from './dbmodels';
 
 function renderAgentsGallery() {
     require('../scss/gallery.scss');
@@ -54,6 +55,7 @@ function renderMailboxPage(database,person) {
     // "body": "Find mission details:<br/>Get important document from NATA office<br/><a href='#'>Open task</a>",
     // "status": "unread",
     // "taskid": "36dh5sec7zdj90sk2rx7pjswi2"
+
     let columns = [{
             name: "from",
             title: "From",
@@ -83,7 +85,7 @@ function renderMailboxPage(database,person) {
     while (contentDiv.firstChild) contentDiv.removeChild(contentDiv.firstChild)
 
     require('../scss/table.scss');
-    let mails = database.messages.filter((m) => m["to"] == person.email);
+    let mails = database.messages.filter((m) => m["from"] == person.email || m["to"] == person.email);
     let table = new TableControl(contentDiv, columns, mails);
 
 }
@@ -130,17 +132,33 @@ function renderTasksPage(database,person) {
     let table = new TableControl(contentDiv, tasksTableColumns, tasks);
 }
 
-function renderNewTaskPage(database, person){
-    let contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = require('html-loader!../html/taskedit.html');
+function renderNewTaskPage(database, person) {
 
-    let btnSave = document.getElementById('btnSave')
-    for (let link of links) {
-        link.onclick = (event) => {
-            menuItemClickFunction(event.target.hash)
-        };
+    require('../scss/taskedit.scss');
+    let agents = database.persons.filter((p)=> p.type=="Agent");
+    let taskeditHtml = _.template(require("html-loader!../html/taskedit.html"))({agents: agents});
+
+    let contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = taskeditHtml;//require('html-loader!../html/taskedit.html');
+
+    let btnSave = document.getElementById('btnSave');
+    let btnCancel = document.getElementById('btnCancel');
+
+    btnSave.onclick = (event) => {
+        let title = document.getElementById("title").value;
+        let details = document.getElementById("details").value;
+        let agentid = document.getElementById("agentid").value;
+        let agent = database.persons.find((x)=>x.id==agentid);
+        let task = new dbmodels.Task(title, details, person.id, agentid);
+        let mail = new dbmodels.Message(person.email, agent.email, task, 'Mission created');
+        database.tasks.unshift(task);
+        database.messages.unshift(mail);
+        renderTasksPage(database, person);
+    };
+
+    btnCancel.onclick = (event) => {
+        renderTasksPage(database, person);
     }
-    
 }
 
 function renderContactsPage(){

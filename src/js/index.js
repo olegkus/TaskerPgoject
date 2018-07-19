@@ -1,7 +1,7 @@
 import database from './database';
 import LoginControl from './login';
 import MenuControl from './menuControl';
-import dbmodels from './model';
+import dbmodels from './dbmodels';
 import menuActions from './menuActions';
 let _ = require('lodash');
 

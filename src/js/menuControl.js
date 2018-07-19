@@ -1,7 +1,7 @@
 import menuTemplate from "html-loader!../html/menu.html";
 require('../scss/global-menu.scss');
 let _ = require('lodash');
-import dbmodels from './model';
+import dbmodels from './dbmodels';
 
 
 
