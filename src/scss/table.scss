@@ -1,0 +1,35 @@
+$darkblue: #6495ED;
+
+.data-table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto; // margin-left:80px;
+    border-collapse: collapse;
+    font-size: 18px;
+    font-family: 'Pathway Gothic One';
+    background-color: #fff;
+    color: grey;
+    padding-left: 20px;
+    text-align:center;
+}
+
+
+.row-table {
+    border-bottom: 1px solid #d1d1d1;
+    font-family: 'Pathway Gothic One';
+    height: 50px;
+    &:hover {
+        background-color: #f9f9f9;
+    }
+}
+
+.table-column-name__link {
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Pathway Gothic One';
+    color: $darkblue;
+   
+}
+
+
+

@@ -1,0 +1,10 @@
+<div class="table">
+    <h3><%-title %></h3>
+    <% for(let i=0; i<Math.ceil(items.length/3); i++) {%>
+    <div class='picture_box'>
+        <% for(img of items.slice(i*3,i*3+3)){  %>
+            <img src="<%-img%>" alt="">
+        <%}%>
+    </div>
+    <%}%>
+</div>

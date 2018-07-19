@@ -1,20 +1,14 @@
-// todo: make better solution with "type" 
 
-function DBObject(){}
-DBObject.prototype.constructor = DBObject;
-DBObject.prototype.newid = function(){ return ""};
 
-function Person(name, surname, email, login, passwordhash)
+function Person(name, surname, email, login, password)
 {
-	this.id = this.newid(); //"nvcjf1hs7tf8yyk4lmlijqkuo9";
+	this.id = this.newid(); 
 	this.name = name;
 	this.surname = surname;
 	this.email = email;
 	this.login = login;
-	this.passwordhash = passwordhash;
+	this.password = password;
 }
-Agent.prototype = Object.create(DBObject.prototype);
-Person.prototype.constructor = Person;
 Person.prototype.getFullName = function(){ return this.name+' '+this.surname};
 
 function Agent(){
@@ -42,8 +36,7 @@ function Task(title, details, managerid, agentid){
 	this.managerid = managerid;
 	this.agentid = agentid;
 }
-Task.prototype.constructor = Task;
-Task.prototype.getPermissions = function(user){ }
+
 
 function Message(from, to, task, actionName)
 {
@@ -55,4 +48,11 @@ function Message(from, to, task, actionName)
 	this.status = "unread" //"read",
 	this.taskid = task.id // ??
 }
-Message.prototype.constructor = Message;
+
+
+
+
+module.exports = {
+	Agent: Agent, 
+	Manager: Manager
+};

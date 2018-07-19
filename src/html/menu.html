@@ -1,0 +1,26 @@
+
+
+<div class="wrapper">
+    <ul class="menu">
+        <% items.forEach((item)=> { %>
+            <li class="menu_item">
+            <a class="menu_link" href="<%-item.href%>">
+                <%=item.text%>
+            </a>
+                
+                <% if(item.items) {%>
+                <ul class="submenu">
+                    <% for(let sub of item.items){%>
+                    <li class="submenu_item">
+                    <a class="menu_link" href="<%-sub.href%>">
+                        <%=sub.text%>
+                        </a>
+                    </li>
+                    <%}%>
+                </ul>
+                <%}%>
+
+            </li>
+            <% }); %>
+    </ul>
+</div>
